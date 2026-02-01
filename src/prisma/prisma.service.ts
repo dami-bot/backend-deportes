@@ -3,8 +3,15 @@ import { PrismaClient } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
-  // No definimos constructor, dejamos que PrismaClient use el suyo por defecto
-  // que busca automáticamente la variable DATABASE_URL.
+  constructor() {
+    super({
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
+    } as any); // El 'as any' evita que TypeScript tire error de "propiedad desconocida"
+  }
 
   async onModuleInit() {
     await this.$connect();
