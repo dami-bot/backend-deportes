@@ -4,23 +4,22 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    super({
-      // Usamos 'as any' para que TypeScript no bloquee el build en Railway
-      // pero en ejecución Prisma recibirá la URL correctamente.
-      datasources: {
-        db: {
-          url: process.env.DATABASE_URL,
-        },
-      },
-    } as any);
+    // Llamamos al constructor vacío para que no tire error de validación
+    super();
   }
 
   async onModuleInit() {
+    // Forzamos la URL de Railway/Supabase directamente en la configuración interna
+    // antes de hacer el connect.
+    (this as any)._activeDatasources = {
+      db: { url: process.env.DATABASE_URL }
+    };
+
     try {
       await this.$connect();
-      console.log('✅ Base de Datos conectada con éxito');
-    } catch (e) {
-      console.error('❌ Error de conexión:', e);
+      console.log('✅ ¡CONECTADO A SUPABASE EXITOSAMENTE!');
+    } catch (error) {
+      console.error('❌ Error al conectar:', error);
     }
   }
 
