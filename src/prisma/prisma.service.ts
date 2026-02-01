@@ -4,15 +4,17 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
-    // En Prisma 7, es OBLIGATORIO pasarle la configuración al super()
     super({
-      
-       datasourceUrl: process.env.DATABASE_URL,
-      
+      datasources: {
+        db: {
+          url: process.env.DATABASE_URL,
+        },
+      },
     });
   }
 
   async onModuleInit() {
+    // Esto asegura que la conexión se abra cuando arranque el módulo
     await this.$connect();
   }
 }
