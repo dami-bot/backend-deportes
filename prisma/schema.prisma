@@ -1,0 +1,36 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // YA NO VA LA URL ACÁ EN PRISMA 7
+}
+
+model Producto {
+  id          Int      @id @default(autoincrement())
+  nombre      String   @unique
+  descripcion String?
+  precio      Float
+  stock       Int
+  imagen      String
+  
+  // Campo CLAVE para separar los mundos
+  tienda      String   @default("alimentos") // "alimentos" o "deportes"
+
+  // Campos específicos de Deportes (Opcionales)
+  categoria   String?  
+  genero      String?  
+  talle       String?  
+  color       String?
+  isNew       Boolean  @default(false)
+
+  // Campos específicos de Alimentos (Opcionales - para que no se borren)
+  vencimiento   DateTime?
+  ofertaDiaria  Boolean? @default(false)
+  cercaVencimiento Boolean? @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

@@ -1,0 +1,80 @@
+# 1. Instalar el CLI (solo la primera vez en tu PC)
+npm install -g @nestjs/cli
+
+# 2. Crear el proyecto
+nest new nombre-del-proyecto
+
+# 3. Entrar a la carpeta
+cd nombre-del-proyecto
+
+
+# 1. Instalar Prisma y el Cliente
+npm install prisma @prisma/client
+
+# 2. Inicializar Prisma (crea carpeta prisma y archivo .env)
+npx prisma init
+
+# 3. Generar un servicio de Prisma
+
+nest generate service prisma
+
+En src/prisma/prisma.service.ts copiar el código de conexión:
+
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { PrismaClient } from '@prisma/client';
+
+@Injectable()
+export class PrismaService extends PrismaClient implements OnModuleInit {
+  async onModuleInit() {
+    await this.$connect();
+  }
+}
+nest generate resource nombre-entidad
+# Ejemplo: nest generate resource productos
+
+Cada vez que edites el archivo schema.prisma, debés ejecutar:
+
+Bash
+# Crear la tabla en la DB y generar el cliente
+npx prisma migrate dev --name descripcion_del_cambio
+
+# Generar el cliente (si solo hiciste cambios menores)
+npx prisma generate
+
+6. Comandos de Ejecución
+Bash
+# Modo desarrollo (con auto-recarga)
+npm run start:dev
+
+# Compilar para producción
+npm run build
+
+# Arrancar en producción
+npm run start:prod
+
+📝 Resumen de la Arquitectura NestJSPiezaFunciónAnálogo
+ en la vida realMóduloOrganiza y agrupa archivos relacionados.
+ La caja que contiene todo.ControladorDefine las rutas (URLs)
+  y recibe peticiones.El mozo que toma el pedido.
+  ServicioTiene la lógica y habla con la base de datos.
+  El cocinero que prepara el plato.DTODefine la forma de los
+ datos que viajan.El menú que dice qué podés pedir.
+ 
+
+💡 Un consejo para tu memoria:
+No intentes memorizar cada letra. Memorizá el flujo:
+
+Nest New (Proyecto)
+
+Prisma Init (Base de Datos)
+
+Nest G Resource (Funcionalidad)
+
+Prisma Migrate (Tablas)
+
+5. Resumen de Comandos Útiles de Nest CLI
+Comando                       Acción
+nest g mo [nombre]            Crea un Módulo (Organiza el código)
+nest g co [nombre]            Crea un Controlador (Maneja las rutas/URLs)
+nest g s [nombre]             Crea un Servicio (Lógica de negocio y DB)
+npm run start:dev             Arranca el servidor en modo desarrollo (con auto-reload)
