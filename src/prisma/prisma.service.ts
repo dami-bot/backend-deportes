@@ -1,20 +1,16 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor() {
-    super({
-      datasources: {
-        db: {
-          url: process.env.DATABASE_URL,
-        },
-      },
-    });
-  }
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
+  // No definimos constructor, dejamos que PrismaClient use el suyo por defecto
+  // que busca automáticamente la variable DATABASE_URL.
 
   async onModuleInit() {
-    // Esto asegura que la conexión se abra cuando arranque el módulo
     await this.$connect();
+  }
+
+  async onModuleDestroy() {
+    await this.$disconnect();
   }
 }
