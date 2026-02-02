@@ -4,24 +4,23 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    // Si la variable de entorno no existe por un microsegundo, 
-    // le pasamos un string para que el constructor no esté vacío.
-    super({
-      datasourceUrl: process.env.DATABASE_URL || '',
-    });
+    // Pasamos un objeto vacío pero 'tipado' como any para que el constructor
+    // no se queje de estar vacío ni de las propiedades.
+    super({} as any);
   }
 
   async onModuleInit() {
-    // Verificación manual en los logs de Railway
-    if (!process.env.DATABASE_URL) {
-      console.error('❌ ERROR CRÍTICO: DATABASE_URL no está definida en el sistema.');
+    // Si la variable no existe, Prisma usará la del .env por defecto.
+    // Si existe (en Railway), la forzamos aquí:
+    if (process.env.DATABASE_URL) {
+      (this as any)._datasourceUrl = process.env.DATABASE_URL;
     }
-    
+
     try {
       await this.$connect();
-      console.log('🚀 ¡Conexión exitosa a Supabase desde Railway!');
+      console.log('🚀 ¡Sincronizado con Supabase!');
     } catch (error) {
-      console.error('❌ Error al conectar a la base de datos:', error);
+      console.error('❌ Error de conexión:', error);
     }
   }
 
