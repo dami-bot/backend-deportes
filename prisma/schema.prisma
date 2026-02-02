@@ -5,7 +5,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // YA NO VA LA URL ACÁ EN PRISMA 7
+  url      = env("DATABASE_URL") // <--- ESTO ES OBLIGATORIO
+
 }
 
 model Producto {
